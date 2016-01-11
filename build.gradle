@@ -1,0 +1,63 @@
+apply plugin: 'com.android.library'
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'rhino-android'
+
+    publishedGroupId = 'com.faendir.rhino'
+    libraryName = 'rhino-android'
+    artifact = 'rhino-android'
+
+    libraryDescription = 'Allows to import scripts directly into Lightning Launcher'
+
+    siteUrl = 'https://github.com/F43nd1r/Scriptlib'
+    gitUrl = 'https://github.com/F43nd1r/Scriptlib.git'
+
+    libraryVersion = "1.0"
+
+    developerId = 'f43nd1r'
+    developerName = 'Lukas Morawietz'
+    developerEmail = 'lukas.morawietz@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        minSdkVersion 3
+        targetSdkVersion 23
+        versionCode 1
+        versionName libraryVersion
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+configurations {
+    javadocDeps
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'org.mozilla:rhino:1.7.7'
+    compile 'com.google.android.tools:dx:1.7'
+    javadocDeps 'com.android.support:support-annotations:23.1.1'
+}
+
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'bintrayv1.gradle'
+
+/* how to upload: [terminal]
+* gradlew install
+* gradlew bintrayUpload
+*/
