@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/F43nd1r/Scriptlib'
     gitUrl = 'https://github.com/F43nd1r/Scriptlib.git'
 
-    libraryVersion = "1.1"
+    libraryVersion = "1.2"
 
     developerId = 'f43nd1r'
     developerName = 'Lukas Morawietz'
@@ -46,21 +46,20 @@ android {
 
 configurations {
     javadocDeps
+    javadocDeps.extendsFrom compile
 }
 
 dependencies {
     compile 'org.mozilla:rhino:1.7.7'
-    compile 'com.google.android.tools:dx:1.7'
-    androidTestCompile files('libs/dx.jar')
     compile 'com.android.support:support-annotations:23.1.1'
-    javadocDeps 'com.android.support:support-annotations:23.1.1'
+    compile files('libs/dx.jar')
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'org.yaml:snakeyaml:1.16'
 }
 
 
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'installv1.gradle'
 apply from: 'bintrayv1.gradle'
 
 /* how to upload: [terminal]

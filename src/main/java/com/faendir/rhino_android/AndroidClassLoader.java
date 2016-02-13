@@ -15,7 +15,6 @@ import dalvik.system.DexFile;
 
 /**
  * Created by Lukas on 11.01.2016.
- * <p/>
  * Parses java bytecode to dex bytecode and loads it
  */
 @SuppressWarnings("ResultOfMethodCallIgnored")

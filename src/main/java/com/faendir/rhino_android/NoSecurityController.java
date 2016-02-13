@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 /**
  * Created by Lukas on 11.01.2016.
- * <p/>
  * The concept of SecurityControllers doesn't make sense on Android.
  * Load this controller to prevent loading of a different one.
  */
