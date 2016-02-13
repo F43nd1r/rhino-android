@@ -15,6 +15,7 @@ import dalvik.system.DexFile;
 
 /**
  * Created by Lukas on 11.01.2016.
+ * <p/>
  * Parses java bytecode to dex bytecode and loads it
  */
 @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -22,9 +23,9 @@ class AndroidClassLoader extends ClassLoader implements GeneratedClassLoader {
 
     private final ClassLoader parent;
     private DexFile dx;
-    private File classFile;
-    private File dexFile;
-    private File odexOatFile;
+    private final File classFile;
+    private final File dexFile;
+    private final File odexOatFile;
 
     public AndroidClassLoader(ClassLoader parent) {
         this.parent = parent;
@@ -48,7 +49,7 @@ class AndroidClassLoader extends ClassLoader implements GeneratedClassLoader {
             dx = DexFile.loadDex(dexFile.getPath(), odexOatFile.getPath(), 0);
             return dx.loadClass(name, parent);
         } catch (IOException e) {
-            throw new FatalException("failed to define class", e);
+            throw new FatalLoadingException(e);
         } finally {
             if (out != null) try {
                 out.close();
@@ -63,7 +64,7 @@ class AndroidClassLoader extends ClassLoader implements GeneratedClassLoader {
 
     @Override
     public void linkClass(Class<?> aClass) {
-
+        //doesn't make sense on android
     }
 
     @Override
@@ -80,9 +81,9 @@ class AndroidClassLoader extends ClassLoader implements GeneratedClassLoader {
         return cl;
     }
 
-    private class FatalException extends RuntimeException {
-        public FatalException(String s, Throwable t) {
-            super(s, t);
+    private class FatalLoadingException extends RuntimeException {
+        public FatalLoadingException(Throwable t) {
+            super("Failed to define class", t);
         }
     }
 }

@@ -6,7 +6,7 @@ import org.mozilla.javascript.SecurityController;
 
 /**
  * Created by Lukas on 11.01.2016.
- *
+ * <p/>
  * Helps to prepare a Rhino Context for usage on android.
  */
 public final class RhinoAndroidHelper {
