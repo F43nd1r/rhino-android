@@ -2,7 +2,13 @@
 Find information here - http://www.mozilla.org/rhino/
 
 #How to use
-Instead of calling 
+
+Import via gradle
+```
+compile 'com.faendir.rhino:rhino-android:1.1'
+```
+
+Then, instead of calling 
 ```
 Context.enter()
 ```
