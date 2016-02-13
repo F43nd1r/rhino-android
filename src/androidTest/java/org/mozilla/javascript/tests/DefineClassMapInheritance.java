@@ -1,0 +1,57 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+package org.mozilla.javascript.tests;
+
+import com.faendir.rhino_android.RhinoAndroidHelper;
+
+import org.junit.Test;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ScriptableObject;
+
+import java.lang.reflect.InvocationTargetException;
+
+import static org.junit.Assert.assertEquals;
+
+@SuppressWarnings("serial")
+public class DefineClassMapInheritance {
+
+    public static class Food extends ScriptableObject {
+        @Override
+        public String getClassName() {
+            return getClass().getSimpleName();
+        }
+    }
+
+    public static class Fruit extends Food {
+    }
+
+    public static class Vegetable extends Food {
+    }
+
+    @Test
+    public void test() throws IllegalAccessException, InstantiationException,
+            InvocationTargetException {
+        Context cx = RhinoAndroidHelper.prepareContext();
+        try {
+            ScriptableObject scope = cx.initStandardObjects();
+
+            // define two classes that share a parent prototype
+            ScriptableObject.defineClass(scope, Fruit.class, false, true);
+            ScriptableObject.defineClass(scope, Vegetable.class, false, true);
+
+            assertEquals(Boolean.TRUE,
+                    evaluate(cx, scope, "(new Fruit instanceof Food)"));
+            assertEquals(Boolean.TRUE,
+                    evaluate(cx, scope, "(new Vegetable instanceof Food)"));
+        } finally {
+            Context.exit();
+        }
+    }
+
+    private static Object evaluate(Context cx, ScriptableObject scope,
+            String source) {
+        return cx.evaluateString(scope, source, "<eval>", 1, null);
+    }
+}

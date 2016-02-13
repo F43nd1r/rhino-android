@@ -1,5 +1,7 @@
 package com.faendir.rhino_android;
 
+import android.support.annotation.VisibleForTesting;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.SecurityController;
@@ -15,16 +17,27 @@ public final class RhinoAndroidHelper {
 
     /**
      * call this instead of Context.enter()
+     *
      * @return a context prepared for android
      */
-    public static Context prepareContext(){
-        if(!SecurityController.hasGlobal())SecurityController.initGlobal(new NoSecurityController());
-        if(!ContextFactory.hasExplicitGlobal()){
-            ContextFactory.getGlobalSetter().setContextFactoryGlobal(new AndroidContextFactory());
-        }
-        else if (!(ContextFactory.getGlobal() instanceof AndroidContextFactory)) {
-            throw new IllegalStateException("Cannot initialize factory for Android Rhino: There is already another factory");
-        }
+    public static Context prepareContext() {
+        if (!SecurityController.hasGlobal())
+            SecurityController.initGlobal(new NoSecurityController());
+        getContextFactory();
         return Context.enter();
+    }
+
+    @VisibleForTesting
+    public static ContextFactory getContextFactory() {
+        ContextFactory factory;
+        if (!ContextFactory.hasExplicitGlobal()) {
+            factory = new AndroidContextFactory();
+            ContextFactory.getGlobalSetter().setContextFactoryGlobal(factory);
+        } else if (!(ContextFactory.getGlobal() instanceof AndroidContextFactory)) {
+            throw new IllegalStateException("Cannot initialize factory for Android Rhino: There is already another factory");
+        } else {
+            factory = ContextFactory.getGlobal();
+        }
+        return factory;
     }
 }
