@@ -3,6 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 package org.mozilla.javascript.tests;
+import com.faendir.rhino_android.RhinoAndroidHelper;
+
 import org.mozilla.javascript.*;
 import java.util.Collections;
 import java.util.Map;
@@ -18,7 +20,7 @@ public class Evaluator {
   }
 
   public static Object eval(String source, Map<String, Scriptable> bindings) {
-    Context cx = ContextFactory.getGlobal().enterContext();
+    Context cx = RhinoAndroidHelper.getContextFactory().enterContext();
     try {
       Scriptable scope = cx.initStandardObjects();
       if (bindings != null) {
