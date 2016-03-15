@@ -5,7 +5,7 @@ Find information here - http://www.mozilla.org/rhino/
 
 Import via gradle
 ```
-compile 'com.faendir.rhino:rhino-android:1.1'
+compile 'com.faendir.rhino:rhino-android:1.3'
 ```
 
 Then, instead of calling 
