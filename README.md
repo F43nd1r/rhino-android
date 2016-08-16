@@ -1,3 +1,6 @@
+[![Bintray](https://img.shields.io/bintray/v/f43nd1r/maven/rhino-android.svg?maxAge=2592000)](https://bintray.com/f43nd1r/maven/rhino-android)
+[![Javadocs](http://www.javadoc.io/badge/com.faendir.rhino/rhino-android.svg)](http://www.javadoc.io/doc/com.faendir.rhino/rhino-android)
+
 #Rhino
 Find information here - http://www.mozilla.org/rhino/
 
