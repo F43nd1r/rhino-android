@@ -1,4 +1,5 @@
 [![Bintray](https://img.shields.io/bintray/v/f43nd1r/maven/rhino-android.svg)](https://bintray.com/f43nd1r/maven/rhino-android)
+[![Maven Central](https://img.shields.io/maven-central/v/com.faendir.rhino/rhino-android.svg?maxAge=2592000)](http://search.maven.org/#search%7Cga%7C1%7Ccom.faendir.rhino)
 [![Javadocs](http://www.javadoc.io/badge/com.faendir.rhino/rhino-android.svg)](http://www.javadoc.io/doc/com.faendir.rhino/rhino-android)
 
 #Rhino
