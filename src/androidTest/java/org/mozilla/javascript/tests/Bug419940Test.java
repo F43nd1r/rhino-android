@@ -31,7 +31,7 @@ public class Bug419940Test extends TestCase {
       String source =
           "(new JavaAdapter(" + Foo.class.getName() + ", {})).doSomething();";
 
-      Context cx = RhinoAndroidHelper.getContextFactory().enterContext();
+      Context cx = RhinoAndroidHelper.prepareContext();
       try {
           Scriptable scope = cx.initStandardObjects();
           Object result = cx.evaluateString(scope, source, "source", 1, null);

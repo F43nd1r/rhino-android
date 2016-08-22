@@ -7,7 +7,7 @@
  */
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,8 +20,6 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.ast.AstRoot;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * @author André Bargull
  * 
@@ -32,7 +30,7 @@ public class Bug687669Test {
 
     @Before
     public void setUp() {
-        cx = RhinoAndroidHelper.prepareContext();
+        cx = Context.enter();
         cx.setLanguageVersion(Context.VERSION_1_8);
         scope = cx.initStandardObjects();
     }

@@ -4,8 +4,6 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,12 +12,14 @@ import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Undefined;
 
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@Ignore
 public class UndefinedOrNullThisInFunctionCallOrApplyTest {
 
     private Context cx;
@@ -28,7 +28,7 @@ public class UndefinedOrNullThisInFunctionCallOrApplyTest {
 
     @Before
     public void setUp() throws Exception {
-        cx = RhinoAndroidHelper.prepareContext();
+        cx = Context.enter();
         function = new BaseFunction() {
             @Override
             public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
@@ -95,7 +95,7 @@ public class UndefinedOrNullThisInFunctionCallOrApplyTest {
         assertEquals(arr.get(1), arr.get(2));
     }
 
-    /*@Test
+    @Test
     public void whenVersionGt17ThenPassNullAsThisObjForApplyJS() {
         cx.setLanguageVersion(Context.VERSION_1_8);
         NativeArray arr = (NativeArray) Evaluator.eval("function F2() {return this;};[this, F2.apply(), F2.apply(undefined)];");
@@ -104,7 +104,6 @@ public class UndefinedOrNullThisInFunctionCallOrApplyTest {
         assertNotEquals(arr.get(0), arr.get(2));
         assertNotEquals(arr.get(1), arr.get(2));
         assertEquals(Undefined.instance, arr.get(2));
-        assertEquals(Undefined.SCRIPTABLE_UNDEFINED, arr.get(2));
 
         arr = (NativeArray) Evaluator.eval("function F2() {return this;};[this, F2.apply(), F2.apply(null)];");
         assertNotEquals(arr.get(0), arr.get(1));
@@ -118,14 +117,13 @@ public class UndefinedOrNullThisInFunctionCallOrApplyTest {
         assertNotEquals(arr.get(0), arr.get(2));
         assertNotEquals(arr.get(1), arr.get(2));
         assertEquals(Undefined.instance, arr.get(2));
-        assertEquals(Undefined.SCRIPTABLE_UNDEFINED, arr.get(2));
 
         arr = (NativeArray) Evaluator.eval("function F2() {return this;};[this, F2.apply(), F2.apply(null)];");
         assertNotEquals(arr.get(0), arr.get(1));
         assertNotEquals(arr.get(0), arr.get(2));
         assertEquals(arr.get(1), arr.get(2));
 
-    }*/
+    }
 
     @Test
     public void whenVersionLtEq17ThenPassGlobalThisObjForApplyJS() {
@@ -143,7 +141,7 @@ public class UndefinedOrNullThisInFunctionCallOrApplyTest {
         assertEquals(arr.get(1), arr.get(2));
     }
 
-    /*@Test
+    @Test
     public void whenVersionGt17ThenPassNullAsThisObjForCallJS() {
         cx.setLanguageVersion(Context.VERSION_1_8);
         NativeArray arr = (NativeArray) Evaluator.eval("function F2() {return this;};[this, F2.call(), F2.call(undefined)];");
@@ -152,7 +150,6 @@ public class UndefinedOrNullThisInFunctionCallOrApplyTest {
         assertNotEquals(arr.get(0), arr.get(2));
         assertNotEquals(arr.get(1), arr.get(2));
         assertEquals(Undefined.instance, arr.get(2));
-        assertEquals(Undefined.SCRIPTABLE_UNDEFINED, arr.get(2));
 
         arr = (NativeArray) Evaluator.eval("function F2() {return this;};[this, F2.call(), F2.call(null)];");
         assertNotEquals(arr.get(0), arr.get(1));
@@ -166,14 +163,13 @@ public class UndefinedOrNullThisInFunctionCallOrApplyTest {
         assertNotEquals(arr.get(0), arr.get(2));
         assertNotEquals(arr.get(1), arr.get(2));
         assertEquals(Undefined.instance, arr.get(2));
-        assertEquals(Undefined.SCRIPTABLE_UNDEFINED, arr.get(2));
 
         arr = (NativeArray) Evaluator.eval("function F2() {return this;};[this, F2.call(), F2.call(null)];");
         assertNotEquals(arr.get(0), arr.get(1));
         assertNotEquals(arr.get(0), arr.get(2));
         assertEquals(arr.get(1), arr.get(2));
 
-    }*/
+    }
 
     @Test
     public void whenVersionLtEq17ThenPassGlobalThisObjForCallJS() {

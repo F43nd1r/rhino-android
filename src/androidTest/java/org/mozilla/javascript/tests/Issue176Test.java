@@ -8,15 +8,12 @@ import com.faendir.rhino_android.RhinoAndroidHelper;
 
 import junit.framework.TestCase;
 
-import org.junit.Ignore;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.drivers.TestUtils;
 
-import java.io.InputStreamReader;
-
-@Ignore
 public class Issue176Test extends TestCase {
 
 
@@ -26,8 +23,7 @@ public class Issue176Test extends TestCase {
     public void testThrowing() throws Exception {
         cx = RhinoAndroidHelper.prepareContext();
         try {
-            Script script = cx.compileReader(new InputStreamReader(
-                    Bug482203Test.class.getResourceAsStream("Issue176.js")),
+            Script script = cx.compileString(TestUtils.readAsset("Issue176.js"),
                     "Issue176.js", 1, null);
             scope = cx.initStandardObjects();
             scope.put("host", scope, this);

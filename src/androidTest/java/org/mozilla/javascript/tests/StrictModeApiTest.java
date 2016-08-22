@@ -4,9 +4,10 @@
 
 package org.mozilla.javascript.tests;
 
+import com.faendir.rhino_android.AndroidContextFactory;
+
 import junit.framework.TestCase;
 
-import org.junit.Ignore;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextAction;
 import org.mozilla.javascript.ContextFactory;
@@ -18,13 +19,12 @@ import org.mozilla.javascript.EvaluatorException;
  *
  * @author Norris Boyd
  */
-@Ignore
 public class StrictModeApiTest extends TestCase {
 
   private ScriptableObject global;
   private ContextFactory contextFactory;
 
-  static class MyContextFactory extends ContextFactory {
+  static class MyContextFactory extends AndroidContextFactory {
     @Override
     protected boolean hasFeature(Context cx, int featureIndex) {
         switch (featureIndex) {

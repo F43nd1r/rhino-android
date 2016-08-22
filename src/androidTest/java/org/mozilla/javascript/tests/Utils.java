@@ -4,7 +4,7 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import com.faendir.rhino_android.AndroidContextFactory;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextAction;
@@ -43,7 +43,7 @@ public class Utils
 	 */
 	public static void runWithOptimizationLevel(final ContextAction action, final int optimizationLevel)
 	{
-		runWithOptimizationLevel(RhinoAndroidHelper.getContextFactory(), action, optimizationLevel);
+		runWithOptimizationLevel(new AndroidContextFactory(), action, optimizationLevel);
 	}
 
 	/**

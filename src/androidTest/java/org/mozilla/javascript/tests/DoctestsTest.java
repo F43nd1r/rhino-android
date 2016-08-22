@@ -4,19 +4,18 @@
 
 package org.mozilla.javascript.tests;
 
-import org.junit.Ignore;
+import com.faendir.rhino_android.RhinoAndroidHelper;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.drivers.TestUtils;
 import org.mozilla.javascript.tools.shell.Global;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +24,7 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Run doctests in folder testsrc/doctests.
+ * Run doctests in folder assets/doctests.
  *
  * A doctest is a test in the form of an interactive shell session; Rhino
  * collects and runs the inputs to the shell prompt and compares them to the
@@ -33,10 +32,9 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Norris Boyd
  */
-@Ignore
 @RunWith(Parameterized.class)
 public class DoctestsTest {
-    static final String baseDirectory = "testsrc" + File.separator + "doctests";
+    static final String baseDirectory = "doctests";
     static final String doctestsExtension = ".doctest";
     String name;
     String source;
@@ -49,7 +47,7 @@ public class DoctestsTest {
     }
 
     public static File[] getDoctestFiles() {
-        return TestUtils.recursiveListFiles(new File(baseDirectory),
+        return TestUtils.recursiveListAssets(new File(baseDirectory),
                 new FileFilter() {
                     public boolean accept(File f) {
                         return f.getName().endsWith(doctestsExtension);
@@ -57,19 +55,12 @@ public class DoctestsTest {
             });
     }
 
-    public static String loadFile(File f) throws IOException {
-        int length = (int) f.length(); // don't worry about very long files
-        char[] buf = new char[length];
-        new FileReader(f).read(buf, 0, length);
-        return new String(buf);
-    }
-
     @Parameters(name = "{0}")
     public static Collection<Object[]> doctestValues() throws IOException {
         File[] doctests = getDoctestFiles();
         List<Object[]> result = new ArrayList<Object[]>();
         for (File f : doctests) {
-            String contents = loadFile(f);
+            String contents = TestUtils.readAsset(f);
             result.add(new Object[] { f.getName(), contents, -1 });
             result.add(new Object[] { f.getName(), contents, 0 });
             result.add(new Object[] { f.getName(), contents, 9 });
@@ -81,18 +72,18 @@ public class DoctestsTest {
     public static Collection<Object[]> singleDoctest() throws IOException {
         List<Object[]> result = new ArrayList<Object[]>();
         File f = new File(baseDirectory, "Counter.doctest");
-        String contents = loadFile(f);
+        String contents = TestUtils.readAsset(f);
         result.add(new Object[] { f.getName(), contents, -1 });
         return result;
     }
 
     @Test
     public void runDoctest() throws Exception {
-        ContextFactory factory = ContextFactory.getGlobal();
-        Context cx = factory.enterContext();
+        Context cx = RhinoAndroidHelper.prepareContext();
         try {
             cx.setOptimizationLevel(optimizationLevel);
             Global global = new Global(cx);
+            TestUtils.addAssetLoading(global);
             // global.runDoctest throws an exception on any failure
             int testsPassed = global.runDoctest(cx, global, source, name, 1);
             System.out.println(name + "(" + optimizationLevel + "): " +

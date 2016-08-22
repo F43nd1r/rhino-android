@@ -7,19 +7,18 @@
  */
 package org.mozilla.javascript.tests;
 
+import com.faendir.rhino_android.AndroidContextFactory;
+
 import junit.framework.TestCase;
 
-import org.junit.Ignore;
+import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.Callable;
-import org.mozilla.javascript.drivers.TestUtils;
 
 /**
  * @author Norris Boyd
  */
-@Ignore
 public class ObserveInstructionCountTest extends TestCase {
     // Custom Context to store execution time.
     static class MyContext extends Context {
@@ -33,17 +32,7 @@ public class ObserveInstructionCountTest extends TestCase {
         private static final long serialVersionUID = -8018441873635071899L;
     }
 
-    @Override
-    protected void setUp() {
-        TestUtils.setGlobalContextFactory(new MyFactory());
-    }
-
-    @Override
-    protected void tearDown() {
-        TestUtils.setGlobalContextFactory(null);
-    }
-
-    static class MyFactory extends ContextFactory {
+    static class MyFactory extends AndroidContextFactory {
 
         @Override
         protected Context makeContext()

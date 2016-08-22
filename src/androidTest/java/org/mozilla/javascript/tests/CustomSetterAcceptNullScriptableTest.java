@@ -9,7 +9,6 @@ import com.faendir.rhino_android.RhinoAndroidHelper;
 import junit.framework.TestCase;
 
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
@@ -50,8 +49,7 @@ public class CustomSetterAcceptNullScriptableTest extends TestCase
 		final String scriptCode = "foo.myProp = new Foo2();\n"
 			+ "foo.myProp = null;";
 
-		final ContextFactory factory = RhinoAndroidHelper.getContextFactory();
-		final Context cx = factory.enterContext();
+		final Context cx = RhinoAndroidHelper.prepareContext();
 
 		try {
 	        final ScriptableObject topScope = cx.initStandardObjects();

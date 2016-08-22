@@ -4,15 +4,13 @@
 
 package org.mozilla.javascript.tests.harmony;
 
-import org.junit.Ignore;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.drivers.LanguageVersion;
 import org.mozilla.javascript.drivers.RhinoTest;
 import org.mozilla.javascript.drivers.ScriptTestsBase;
 
-@RhinoTest("testsrc/jstests/harmony/symbols.js")
+@RhinoTest("jstests/harmony/symbols.js")
 @LanguageVersion(Context.VERSION_ES6)
-@Ignore
 public class SymbolTest extends ScriptTestsBase
 {
 }

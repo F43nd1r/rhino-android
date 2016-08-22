@@ -4,8 +4,9 @@
 
 package org.mozilla.javascript.tests;
 
+import com.faendir.rhino_android.AndroidContextFactory;
+
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextAction;
@@ -22,7 +23,6 @@ import java.lang.reflect.Method;
  * @see <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=519933">Rhino bug 519933</a>
  * @author Marc Guillemot
  */
-@Ignore
 public class WriteReadOnlyPropertyTest {
 
 	/**
@@ -65,7 +65,7 @@ public class WriteReadOnlyPropertyTest {
 			}
 		};
 
-		final ContextFactory contextFactory = new ContextFactory() {
+		final ContextFactory contextFactory = new AndroidContextFactory() {
 			@Override
 			protected boolean hasFeature(final Context cx, final int featureIndex) {
 				if (Context.FEATURE_STRICT_MODE == featureIndex) {

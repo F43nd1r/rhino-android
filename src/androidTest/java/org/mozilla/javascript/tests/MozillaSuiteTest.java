@@ -6,23 +6,18 @@ package org.mozilla.javascript.tests;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.mozilla.javascript.drivers.JsTestsBase;
 import org.mozilla.javascript.drivers.ShellTest;
 import org.mozilla.javascript.drivers.TestUtils;
 import org.mozilla.javascript.tools.shell.ShellContextFactory;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,7 +41,6 @@ import java.util.List;
  * @author Norris Boyd
  * @author Attila Szegedi
  */
-@Ignore
 @RunWith(Parameterized.class)
 public class MozillaSuiteTest {
     private final File jsFile;
@@ -60,25 +54,7 @@ public class MozillaSuiteTest {
     }
 
     public static File getTestDir() throws IOException {
-        File testDir = null;
-        if (System.getProperty("mozilla.js.tests") != null) {
-            testDir = new File(System.getProperty("mozilla.js.tests"));
-        } else {
-            URL url = JsTestsBase.class.getResource(".");
-            String path = url.getFile();
-            int jsIndex = path.lastIndexOf("/js");
-            if (jsIndex == -1) {
-                throw new IllegalStateException("You aren't running the tests "+
-                    "from within the standard mozilla/js directory structure");
-            }
-            path = path.substring(0, jsIndex + 3).replace('/', File.separatorChar);
-            path = path.replace("%20", " ");
-            testDir = new File(path, "tests");
-        }
-        if (!testDir.isDirectory()) {
-            throw new FileNotFoundException(testDir + " is not a directory");
-        }
-        return testDir;
+        return new File("tests");
     }
 
     public static String getTestFilename(int optimizationLevel) {
@@ -95,13 +71,6 @@ public class MozillaSuiteTest {
             files[i] = new File(testDir, tests[i]);
         }
         return files;
-    }
-
-    public static String loadFile(File f) throws IOException {
-        int length = (int) f.length(); // don't worry about very long files
-        char[] buf = new char[length];
-        new FileReader(f).read(buf, 0, length);
-        return new String(buf);
     }
 
     @Parameters(name = "{index}, js={0}, opt={1}")
@@ -206,7 +175,7 @@ public class MozillaSuiteTest {
                 int optLevel = OPT_LEVELS[i];
                 File testDir = getTestDir();
                 File[] allTests =
-                    TestUtils.recursiveListFiles(testDir,
+                    TestUtils.recursiveListAssets(testDir,
                         new FileFilter() {
                             public boolean accept(File pathname)
                             {

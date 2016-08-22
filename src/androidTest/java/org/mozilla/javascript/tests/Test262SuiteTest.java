@@ -4,17 +4,16 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import com.faendir.rhino_android.AndroidClassLoader;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.GeneratedClassLoader;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
@@ -23,27 +22,16 @@ import org.mozilla.javascript.tools.SourceReader;
 import org.mozilla.javascript.tools.shell.ShellContextFactory;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mozilla.javascript.drivers.TestUtils.JS_FILE_FILTER;
-import static org.mozilla.javascript.drivers.TestUtils.recursiveListFilesHelper;
+import static org.mozilla.javascript.drivers.TestUtils.recursiveListAssetsHelper;
 
-@Ignore
 @RunWith(Parameterized.class)
 public class Test262SuiteTest {
 
@@ -51,7 +39,12 @@ public class Test262SuiteTest {
 
     static Map<Integer, Map<String, Script>> HARNESS_SCRIPT_CACHE = new HashMap<Integer, Map<String, Script>>();
 
-    static ShellContextFactory CTX_FACTORY = new ShellContextFactory();
+    static ShellContextFactory CTX_FACTORY = new ShellContextFactory(){
+        @Override
+        protected GeneratedClassLoader createClassLoader(ClassLoader parent) {
+            return new AndroidClassLoader(parent);
+        }
+    };
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -60,12 +53,6 @@ public class Test262SuiteTest {
         HARNESS_SCRIPT_CACHE.put(9, new HashMap<String, Script>());
 
         CTX_FACTORY.setLanguageVersion(Context.VERSION_ES6);
-        TestUtils.setGlobalContextFactory(CTX_FACTORY);
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-        TestUtils.setGlobalContextFactory(null);
     }
 
     private static final Pattern EXCLUDE_PATTERN = Pattern.compile("\\s{1,4}!\\s*(.+)");
@@ -87,7 +74,7 @@ public class Test262SuiteTest {
     }
 
     private Object executeRhinoScript() {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = CTX_FACTORY.enterContext();
 
         try {
             cx.setOptimizationLevel(optLevel);
@@ -152,7 +139,7 @@ public class Test262SuiteTest {
 
         List<File> dirFiles = new LinkedList<File>();
 
-        Scanner scanner = new Scanner(new File("testsrc/test262.properties"));
+        Scanner scanner = new Scanner(TestUtils.readAsset("test262.properties"));
 
         String curLine = "", nxtLine = "";
 
@@ -169,7 +156,7 @@ public class Test262SuiteTest {
             if (file.isFile()) {
                 testFiles.add(file);
             } else if (file.isDirectory()) {
-                recursiveListFilesHelper(file, JS_FILE_FILTER, dirFiles);
+                recursiveListAssetsHelper(file, JS_FILE_FILTER, dirFiles);
 
                 while (true) {
                     curLine = nxtLine;
@@ -197,7 +184,7 @@ public class Test262SuiteTest {
                             testFiles.add(file);
                             break;
                         } else if (file.isDirectory()) {
-                            recursiveListFilesHelper(file, JS_FILE_FILTER, dirFiles);
+                            recursiveListAssetsHelper(file, JS_FILE_FILTER, dirFiles);
                         }
                     }
                 }

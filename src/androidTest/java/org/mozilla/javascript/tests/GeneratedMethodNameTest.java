@@ -72,7 +72,7 @@ public class GeneratedMethodNameTest extends TestCase
 	}
 
 	public void doTest(final String scriptCode) throws Exception {
-		final Context cx = RhinoAndroidHelper.getContextFactory().enterContext();
+		final Context cx = RhinoAndroidHelper.prepareContext();
 		try {
             Scriptable topScope = cx.initStandardObjects();
     		topScope.put("javaNameGetter", topScope, new JavaNameGetter());

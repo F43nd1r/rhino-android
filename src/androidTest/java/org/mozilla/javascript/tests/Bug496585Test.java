@@ -4,7 +4,7 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import com.faendir.rhino_android.AndroidContextFactory;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class Bug496585Test {
 
     @Test
     public void callOverloadedFunction() {
-        RhinoAndroidHelper.getContextFactory().call(new ContextAction() {
+        new AndroidContextFactory().call(new ContextAction() {
             public Object run(Context cx) {
                 cx.getWrapFactory().setJavaPrimitiveWrap(false);
                 Assert.assertEquals("string[]", cx.evaluateString(

@@ -4,24 +4,23 @@
 
 package org.mozilla.javascript.tests;
 
+import com.faendir.rhino_android.AndroidContextFactory;
+
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
 
 /**
  *
  * @author André Bargull
  */
-@Ignore
 public class Bug637811Test {
     private Context cx;
 
     @Before
     public void setUp() throws Exception {
-        cx = new ContextFactory() {
+        cx = new AndroidContextFactory() {
             @Override
             protected boolean hasFeature(Context cx, int featureIndex) {
                 switch (featureIndex) {

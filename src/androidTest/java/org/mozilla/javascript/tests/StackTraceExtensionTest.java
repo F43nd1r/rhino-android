@@ -1,22 +1,18 @@
 package org.mozilla.javascript.tests;
 
+import com.faendir.rhino_android.AndroidContextFactory;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.StackStyle;
+import org.mozilla.javascript.drivers.TestUtils;
 import org.mozilla.javascript.tools.shell.Global;
 
-import java.io.FileReader;
-import java.io.IOException;
-
-import static org.junit.Assert.*;
-
-@Ignore
 public class StackTraceExtensionTest
 {
     @BeforeClass
@@ -33,7 +29,7 @@ public class StackTraceExtensionTest
 
     private void testTraces(int opt)
     {
-        final ContextFactory factory = new ContextFactory() {
+        final ContextFactory factory = new AndroidContextFactory() {
             @Override
             protected boolean hasFeature(Context cx, int featureIndex)
             {
@@ -53,17 +49,11 @@ public class StackTraceExtensionTest
             cx.setGeneratingDebug(true);
 
             Global global = new Global(cx);
+            TestUtils.addAssetLoading(global);
             Scriptable root = cx.newObject(global);
 
-            FileReader rdr = new FileReader("testsrc/jstests/extensions/stack-traces.js");
 
-            try {
-                cx.evaluateReader(root, rdr, "stack-traces.js", 1, null);
-            } finally {
-                rdr.close();
-            }
-        } catch (IOException ioe) {
-            assertFalse("I/O Error: " + ioe, true);
+            cx.evaluateString(root, TestUtils.readAsset("jstests/extensions/stack-traces.js"), "stack-traces.js", 1, null);
         } finally {
             Context.exit();
         }

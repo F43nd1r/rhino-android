@@ -4,7 +4,17 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,18 +31,6 @@ import org.mozilla.javascript.ast.ScriptNode;
 import org.mozilla.javascript.optimizer.Codegen;
 import org.mozilla.javascript.optimizer.OptFunctionNode;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author André Bargull
  *
@@ -42,7 +40,7 @@ public class Bug782363Test {
 
     @Before
     public void setUp() {
-        cx = RhinoAndroidHelper.prepareContext();
+        cx = Context.enter();
         cx.setLanguageVersion(Context.VERSION_1_8);
         cx.setOptimizationLevel(9);
     }

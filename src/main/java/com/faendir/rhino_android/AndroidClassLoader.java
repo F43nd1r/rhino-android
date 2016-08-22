@@ -1,5 +1,7 @@
 package com.faendir.rhino_android;
 
+import android.support.annotation.VisibleForTesting;
+
 import com.android.dx.command.dexer.Main;
 
 import org.mozilla.javascript.GeneratedClassLoader;
@@ -14,7 +16,8 @@ import dalvik.system.DexFile;
  * Parses java bytecode to dex bytecode and loads it
  */
 @SuppressWarnings("ResultOfMethodCallIgnored")
-class AndroidClassLoader extends ClassLoader implements GeneratedClassLoader {
+@VisibleForTesting
+public class AndroidClassLoader extends ClassLoader implements GeneratedClassLoader {
 
     private final ClassLoader parent;
     private DexFile dx;

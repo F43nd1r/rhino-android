@@ -4,8 +4,6 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
-
 import junit.framework.TestCase;
 
 import org.mozilla.javascript.Context;
@@ -35,7 +33,7 @@ public class Bug448816Test extends TestCase {
         reference.put("c", new HashMap<Object, Object>());
         reference.put(new Integer(1), new Integer(42));
         // get a js object as map
-        Context context = RhinoAndroidHelper.prepareContext();
+        Context context = Context.enter();
         ScriptableObject scope = context.initStandardObjects();
         map = (Map<Object, Object>) context.evaluateString(scope,
                 "({ a: 'a', b: true, c: new java.util.HashMap(), 1: 42});",

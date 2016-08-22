@@ -1,32 +1,29 @@
 package org.mozilla.javascript.tests.commonjs.module;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
-
 import junit.framework.TestCase;
 
-import org.junit.Ignore;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.commonjs.module.ModuleScript;
+import org.mozilla.javascript.commonjs.module.ModuleScriptProvider;
 import org.mozilla.javascript.commonjs.module.Require;
-import org.mozilla.javascript.commonjs.module.provider.StrongCachingModuleScriptProvider;
-import org.mozilla.javascript.commonjs.module.provider.UrlModuleSourceProvider;
+import org.mozilla.javascript.drivers.TestUtils;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
 
 /**
  * @author Attila Szegedi
  * @version $Id: RequireTest.java,v 1.1 2011/04/07 22:24:37 hannes%helma.at Exp $
  */
-@Ignore
-public class RequireTest extends TestCase
-{
-    public void testSandboxed() throws Exception
-    {
+public class RequireTest extends TestCase {
+    private final File dir = new File("org/mozilla/javascript/tests/commonjs/module");
+
+    public void testSandboxed() throws Exception {
         final Context cx = createContext();
         final Require require = getSandboxedRequire(cx);
         require.requireMain(cx, "testSandboxed");
@@ -36,25 +33,22 @@ public class RequireTest extends TestCase
         try {
             require.requireMain(cx, "blah");
             fail();
-        }
-        catch(IllegalStateException e) {
+        } catch (IllegalStateException e) {
             // Expected, success
         }
     }
 
-    private Context createContext()
-    {
-        final Context cx = RhinoAndroidHelper.prepareContext();
+    private Context createContext() {
+        final Context cx = Context.enter();
         cx.setOptimizationLevel(-1);
         return cx;
     }
 
-    public void testNonSandboxed() throws Exception
-    {
+    public void testNonSandboxed() throws Exception {
         final Context cx = createContext();
         final Scriptable scope = cx.initStandardObjects();
         final Require require = getSandboxedRequire(cx, scope, false);
-        final String jsFile = getClass().getResource("testNonSandboxed.js").toExternalForm();
+        final String jsFile = TestUtils.readAsset(dir + File.separator + "testNonSandboxed.js");
         ScriptableObject.putProperty(scope, "moduleUri", jsFile);
         require.requireMain(cx, "testNonSandboxed");
     }
@@ -68,7 +62,7 @@ public class RequireTest extends TestCase
         final Scriptable scope = cx.initStandardObjects();
         final Require require = getSandboxedRequire(cx, scope, false);
         require.install(scope);
-        cx.evaluateReader(scope, getReader("testRelativeId.js"),
+        cx.evaluateString(scope, TestUtils.readAsset(dir + File.separator + "testRelativeId.js"),
                 "testRelativeId.js", 1, null);
     }
 
@@ -77,13 +71,12 @@ public class RequireTest extends TestCase
         final Scriptable scope = cx.initStandardObjects();
         final Require require = getSandboxedRequire(cx, scope, false);
         require.install(scope);
-        cx.evaluateReader(scope, getReader("testSetMainForAlreadyLoadedModule.js"),
+        cx.evaluateString(scope, TestUtils.readAsset(dir + File.separator + "testSetMainForAlreadyLoadedModule.js"),
                 "testSetMainForAlreadyLoadedModule.js", 1, null);
         try {
             require.requireMain(cx, "assert");
             fail();
-        }
-        catch(IllegalStateException e) {
+        } catch (IllegalStateException e) {
             assertEquals(e.getMessage(), "Attempt to set main module after it was loaded");
         }
     }
@@ -98,21 +91,24 @@ public class RequireTest extends TestCase
     }
 
     private Require getSandboxedRequire(final Context cx)
-    throws URISyntaxException {
+            throws URISyntaxException {
         return getSandboxedRequire(cx, cx.initStandardObjects(), true);
     }
 
     private Require getSandboxedRequire(Context cx, Scriptable scope, boolean sandboxed)
-            throws URISyntaxException
-    {
+            throws URISyntaxException {
         return new Require(cx, cx.initStandardObjects(),
-                new StrongCachingModuleScriptProvider(
-                        new UrlModuleSourceProvider(Collections.singleton(
-                                getDirectory()), null)), null, null, true);
+                new ModuleScriptProvider() {
+                    @Override
+                    public ModuleScript getModuleScript(Context cx, String moduleId, URI moduleUri, URI baseUri, Scriptable paths) throws Exception {
+                        File f = new File(dir, moduleId + ".js");
+                        return new ModuleScript(cx.compileString(TestUtils.readAsset(f), moduleId, 1, null), f.toURI(), dir.toURI());
+                    }
+                }, null, null, true);
     }
 
     private URI getDirectory() throws URISyntaxException {
-        final String jsFile = getClass().getResource("testSandboxed.js").toExternalForm();
-        return new URI(jsFile.substring(0, jsFile.lastIndexOf('/') + 1));
+        final String jsFile = TestUtils.readAsset(getClass().getPackage().getName() + File.separator + "testSandboxed.js");
+        return new URI(jsFile);
     }
 }

@@ -4,26 +4,24 @@ import com.faendir.rhino_android.RhinoAndroidHelper;
 
 import junit.framework.AssertionFailedError;
 
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.commonjs.module.ModuleScript;
+import org.mozilla.javascript.commonjs.module.ModuleScriptProvider;
 import org.mozilla.javascript.commonjs.module.Require;
-import org.mozilla.javascript.commonjs.module.provider.StrongCachingModuleScriptProvider;
-import org.mozilla.javascript.commonjs.module.provider.UrlModuleSourceProvider;
+import org.mozilla.javascript.drivers.TestUtils;
 
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-@Ignore
 @RunWith(Parameterized.class)
 public class ComplianceTest {
 
@@ -36,21 +34,22 @@ public class ComplianceTest {
     @Parameterized.Parameters(name = "/{0}")
     public static Collection<Object[]> data() {
         List<Object[]> retval = new ArrayList<Object[]>(16);
-        final File[] files = new File("testsrc/org/mozilla/javascript/tests/commonjs/module/1.0").listFiles();
+        final List<File> files = TestUtils.listAssetDirectories("org/mozilla/javascript/tests/commonjs/module/1.0");
         for (File file : files) {
-            if (file.isDirectory()) {
-                retval.add(new Object[]{file.getName(), file});
-            }
+            retval.add(new Object[]{file.getName(), file});
         }
         return retval;
     }
 
-    private static Require createRequire(File dir, Context cx, Scriptable scope)
+    private static Require createRequire(final File dir, Context cx, final Scriptable scope)
             throws URISyntaxException {
-        return new Require(cx, scope, new StrongCachingModuleScriptProvider(
-                new UrlModuleSourceProvider(
-                        Collections.singleton(dir.getAbsoluteFile().toURI()),
-                        Collections.singleton(new URI(ComplianceTest.class.getResource(".").toExternalForm() + "/")))),
+        return new Require(cx, scope, new ModuleScriptProvider() {
+            @Override
+            public ModuleScript getModuleScript(Context cx, String moduleId, URI moduleUri, URI baseUri, Scriptable paths) throws Exception {
+                File f = new File(dir, moduleId + ".js");
+                return new ModuleScript(cx.compileString(TestUtils.readAsset(f), moduleId, 1, null), f.toURI(), dir.toURI());
+            }
+        },
                 null, null, false);
     }
 

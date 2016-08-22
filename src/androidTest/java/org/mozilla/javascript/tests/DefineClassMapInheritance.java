@@ -4,15 +4,13 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import static org.junit.Assert.*;
+
+import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptableObject;
-
-import java.lang.reflect.InvocationTargetException;
-
-import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("serial")
 public class DefineClassMapInheritance {
@@ -33,7 +31,7 @@ public class DefineClassMapInheritance {
     @Test
     public void test() throws IllegalAccessException, InstantiationException,
             InvocationTargetException {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             ScriptableObject scope = cx.initStandardObjects();
 

@@ -8,24 +8,20 @@ import com.faendir.rhino_android.RhinoAndroidHelper;
 
 import junit.framework.TestCase;
 
-import org.junit.Ignore;
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.drivers.TestUtils;
 
-import java.io.InputStreamReader;
-
-@Ignore
 public class Bug482203Test extends TestCase {
-
+    
     public void testJsApi() throws Exception {
         Context cx = RhinoAndroidHelper.prepareContext();
         try {
             cx.setOptimizationLevel(-1);
-            Script script = cx.compileReader(new InputStreamReader(
-                    Bug482203Test.class.getResourceAsStream("Bug482203.js")),
+            Script script = cx.compileString(TestUtils.readAsset("Bug482203.js"),
                     "", 1, null);
             Scriptable scope = cx.initStandardObjects();
             script.exec(cx, scope);
@@ -46,13 +42,12 @@ public class Bug482203Test extends TestCase {
             Context.exit();
         }
     }
-
+    
     public void testJavaApi() throws Exception {
         Context cx = RhinoAndroidHelper.prepareContext();
         try {
             cx.setOptimizationLevel(-1);
-            Script script = cx.compileReader(new InputStreamReader(
-                    Bug482203Test.class.getResourceAsStream("Bug482203.js")),
+            Script script = cx.compileString(TestUtils.readAsset("Bug482203.js"),
                     "", 1, null);
             Scriptable scope = cx.initStandardObjects();
             cx.executeScriptWithContinuations(script, scope);

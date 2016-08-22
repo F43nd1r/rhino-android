@@ -1,7 +1,5 @@
 package org.mozilla.javascript.tests.commonjs.module;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
-
 import org.junit.Ignore;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
@@ -43,7 +41,7 @@ public class RequireJarTest extends RequireTest
 
     private Context createContext()
     {
-        final Context cx = RhinoAndroidHelper.prepareContext();
+        final Context cx = Context.enter(); 
         cx.setOptimizationLevel(-1);
         return cx;
     }

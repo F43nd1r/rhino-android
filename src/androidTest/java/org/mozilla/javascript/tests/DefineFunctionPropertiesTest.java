@@ -4,15 +4,8 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
-
+import org.mozilla.javascript.*;
 import junit.framework.TestCase;
-
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Undefined;
 
 /**
  * Example of defining global functions.
@@ -29,7 +22,7 @@ public class DefineFunctionPropertiesTest extends TestCase {
      */
     @Override
     public void setUp() {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             global = cx.initStandardObjects();
             String[] names = { "f", "g" };
@@ -52,7 +45,7 @@ public class DefineFunctionPropertiesTest extends TestCase {
      * Simple test: call 'f' defined above
      */
     public void testSimpleFunction() {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             Object result = cx.evaluateString(global, "f(7) + 1",
                     "test source", 1, null);
@@ -86,7 +79,7 @@ public class DefineFunctionPropertiesTest extends TestCase {
      * defined above.
      */
     public void testPrivateData() {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             global.associateValue(key, "bar");
             Object result = cx.evaluateString(global, "g('foo');",

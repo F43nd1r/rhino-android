@@ -22,8 +22,7 @@ public final class RhinoAndroidHelper {
     public static Context prepareContext() {
         if (!SecurityController.hasGlobal())
             SecurityController.initGlobal(new NoSecurityController());
-        getContextFactory();
-        return Context.enter();
+        return getContextFactory().enterContext();
     }
 
     @VisibleForTesting

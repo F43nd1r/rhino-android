@@ -4,7 +4,7 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import com.faendir.rhino_android.AndroidContextFactory;
 
 import junit.framework.TestCase;
 
@@ -125,7 +125,7 @@ public class TypeOfTest extends TestCase
 
 	private void doTest(final int optimizationLevel, final String expected, final ContextAction action)
 	{
-		Object o = RhinoAndroidHelper.getContextFactory().call(new ContextAction()
+		Object o = new AndroidContextFactory().call(new ContextAction()
 			{
 				public Object run(final Context context)
 				{

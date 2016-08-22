@@ -7,22 +7,22 @@
  */
 package org.mozilla.javascript.tests;
 
+import com.faendir.rhino_android.AndroidClassLoader;
+
 import junit.framework.TestCase;
 
-import org.junit.Ignore;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextAction;
 import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.GeneratedClassLoader;
 import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Script;
-import org.mozilla.javascript.drivers.TestUtils;
 import org.mozilla.javascript.tools.shell.Global;
 import org.mozilla.javascript.tools.shell.ShellContextFactory;
 
 /**
  * @author donnamalayeri
  */
-@Ignore
 public class JavaAcessibilityTest extends TestCase {
 
   protected final Global global = new Global();
@@ -32,22 +32,17 @@ public class JavaAcessibilityTest extends TestCase {
     global.init(contextFactory);
   }
 
-  @Override
-  protected void setUp() {
-    TestUtils.setGlobalContextFactory(contextFactory);
-  }
-
-  @Override
-  protected void tearDown() {
-    TestUtils.setGlobalContextFactory(null);
-  }
-
   private ContextFactory contextFactory = new ShellContextFactory() {
     @Override
     protected boolean hasFeature(Context cx, int featureIndex) {
       if (featureIndex == Context.FEATURE_ENHANCED_JAVA_ACCESS)
             return true;
       return super.hasFeature(cx, featureIndex);
+    }
+
+    @Override
+    protected GeneratedClassLoader createClassLoader(ClassLoader parent) {
+      return new AndroidClassLoader(parent);
     }
   };
 

@@ -6,8 +6,6 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
-
 import junit.framework.TestCase;
 
 import org.mozilla.javascript.ConsString;
@@ -43,7 +41,7 @@ public class ContinuationsApiTest extends TestCase {
     private static final long serialVersionUID = 4189002778806232070L;
 
     public int f(int a) {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             ContinuationPending pending = cx.captureContinuation();
             pending.setApplicationState(a);
@@ -54,7 +52,7 @@ public class ContinuationsApiTest extends TestCase {
     }
 
     public int g(int a) {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             ContinuationPending pending = cx.captureContinuation();
             pending.setApplicationState(2*a);
@@ -64,7 +62,7 @@ public class ContinuationsApiTest extends TestCase {
         }
     }
     public String h() {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             ContinuationPending pending = cx.captureContinuation();
             pending.setApplicationState("2*3");
@@ -77,7 +75,7 @@ public class ContinuationsApiTest extends TestCase {
 
   @Override
   public void setUp() {
-      Context cx = RhinoAndroidHelper.prepareContext();
+      Context cx = Context.enter();
       try {
           globalScope = cx.initStandardObjects();
           cx.setOptimizationLevel(-1); // must use interpreter mode
@@ -89,7 +87,7 @@ public class ContinuationsApiTest extends TestCase {
   }
 
   public void testScriptWithContinuations() {
-      Context cx = RhinoAndroidHelper.prepareContext();
+      Context cx = Context.enter();
       try {
           cx.setOptimizationLevel(-1); // must use interpreter mode
           Script script = cx.compileString("myObject.f(3) + 1;",
@@ -110,7 +108,7 @@ public class ContinuationsApiTest extends TestCase {
   }
 
   public void testScriptWithMultipleContinuations() {
-      Context cx = RhinoAndroidHelper.prepareContext();
+      Context cx = Context.enter();
       try {
           cx.setOptimizationLevel(-1); // must use interpreter mode
           Script script = cx.compileString(
@@ -138,7 +136,7 @@ public class ContinuationsApiTest extends TestCase {
   }
 
   public void testScriptWithNestedContinuations() {
-      Context cx = RhinoAndroidHelper.prepareContext();
+      Context cx = Context.enter();
       try {
           cx.setOptimizationLevel(-1); // must use interpreter mode
           Script script = cx.compileString("myObject.g( myObject.f(1) ) + 2;",
@@ -166,7 +164,7 @@ public class ContinuationsApiTest extends TestCase {
 
 
   public void testFunctionWithContinuations() {
-      Context cx = RhinoAndroidHelper.prepareContext();
+      Context cx = Context.enter();
       try {
           cx.setOptimizationLevel(-1); // must use interpreter mode
           cx.evaluateString(globalScope,
@@ -194,7 +192,7 @@ public class ContinuationsApiTest extends TestCase {
    * executeScriptWithContinuations or callFunctionWithContinuations.
    */
   public void testErrorOnEvalCall() {
-      Context cx = RhinoAndroidHelper.prepareContext();
+      Context cx = Context.enter();
       try {
           cx.setOptimizationLevel(-1); // must use interpreter mode
           Script script = cx.compileString("eval('myObject.f(3);');",
@@ -213,7 +211,7 @@ public class ContinuationsApiTest extends TestCase {
   public void testSerializationWithContinuations()
       throws IOException, ClassNotFoundException
   {
-      Context cx = RhinoAndroidHelper.prepareContext();
+      Context cx = Context.enter();
       try {
           cx.setOptimizationLevel(-1); // must use interpreter mode
           cx.evaluateString(globalScope,
@@ -254,7 +252,7 @@ public class ContinuationsApiTest extends TestCase {
 
       {
           Scriptable globalScope;
-          Context cx = RhinoAndroidHelper.prepareContext();
+          Context cx = Context.enter();
           try {
               globalScope = cx.initStandardObjects();
               cx.setOptimizationLevel(-1); // must use interpreter mode
@@ -263,7 +261,7 @@ public class ContinuationsApiTest extends TestCase {
               Context.exit();
           }
 
-          cx = RhinoAndroidHelper.prepareContext();
+          cx = Context.enter();
           try {
               cx.setOptimizationLevel(-1); // must use interpreter mode
               cx.evaluateString(
@@ -290,7 +288,7 @@ public class ContinuationsApiTest extends TestCase {
 
       {
           try {
-              Context cx = RhinoAndroidHelper.prepareContext();
+              Context cx = Context.enter();
 
               Scriptable globalScope;
 
@@ -314,7 +312,7 @@ public class ContinuationsApiTest extends TestCase {
   public void testContinuationsInlineFunctionsSerialization() throws IOException, ClassNotFoundException {
 
       Scriptable globalScope;
-      Context cx = RhinoAndroidHelper.prepareContext();
+      Context cx = Context.enter();
       try {
           globalScope = cx.initStandardObjects();
           cx.setOptimizationLevel(-1); // must use interpreter mode
@@ -323,7 +321,7 @@ public class ContinuationsApiTest extends TestCase {
           Context.exit();
       }
 
-      cx = RhinoAndroidHelper.prepareContext();
+      cx = Context.enter();
       try {
           cx.setOptimizationLevel(-1); // must use interpreter mode
           cx.evaluateString(globalScope, "function f(a) { var k = eval(myObject.h()); var t = []; return k; }",

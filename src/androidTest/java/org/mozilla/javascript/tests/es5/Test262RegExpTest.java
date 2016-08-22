@@ -4,7 +4,8 @@
 
 package org.mozilla.javascript.tests.es5;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,9 +13,6 @@ import org.junit.Test;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.ScriptableObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -27,7 +25,7 @@ public class Test262RegExpTest {
 
     @Before
     public void setUp() {
-        cx = RhinoAndroidHelper.prepareContext();
+        cx = Context.enter();
         scope = cx.initStandardObjects();
     }
 

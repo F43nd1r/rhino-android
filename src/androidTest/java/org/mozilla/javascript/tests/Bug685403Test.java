@@ -4,7 +4,8 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,9 +17,6 @@ import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 /**
  * @author André Bargull
  *
@@ -29,7 +27,7 @@ public class Bug685403Test {
 
     @Before
     public void setUp() {
-        cx = RhinoAndroidHelper.prepareContext();
+        cx = Context.enter();
         cx.setOptimizationLevel(-1);
         scope = cx.initStandardObjects();
     }

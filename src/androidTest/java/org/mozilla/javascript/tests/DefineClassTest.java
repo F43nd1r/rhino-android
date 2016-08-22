@@ -4,8 +4,6 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mozilla.javascript.Context;
@@ -26,7 +24,7 @@ public class DefineClassTest {
 
     @Test
     public void testAnnotatedHostObject() {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             Object result = evaluate(cx, "a = new AnnotatedHostObject(); a.initialized;");
             assertEquals(result, Boolean.TRUE);
@@ -49,7 +47,7 @@ public class DefineClassTest {
 
     @Test
     public void testTraditionalHostObject() {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             Object result = evaluate(cx, "t = new TraditionalHostObject(); t.initialized;");
             assertEquals(result, Boolean.TRUE);
@@ -75,7 +73,7 @@ public class DefineClassTest {
 
     @Before
     public void init() throws Exception {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         try {
             scope = cx.initStandardObjects();
             ScriptableObject.defineClass(scope, AnnotatedHostObject.class);

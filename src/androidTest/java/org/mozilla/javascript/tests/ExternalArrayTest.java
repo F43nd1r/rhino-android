@@ -4,27 +4,22 @@ import com.faendir.rhino_android.RhinoAndroidHelper;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ExternalArrayData;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.drivers.TestUtils;
 import org.mozilla.javascript.tools.shell.Global;
 import org.mozilla.javascript.typedarrays.NativeFloat64Array;
 import org.mozilla.javascript.typedarrays.NativeInt16Array;
 import org.mozilla.javascript.typedarrays.NativeInt32Array;
 
-import java.io.FileReader;
-import java.io.IOException;
-
-import static org.junit.Assert.assertFalse;
-
-@Ignore
 public class ExternalArrayTest
 {
     private Context cx;
     private Scriptable root;
+
 
     @Before
     public void init()
@@ -34,6 +29,7 @@ public class ExternalArrayTest
         cx.setGeneratingDebug(true);
 
         Global global = new Global(cx);
+        TestUtils.addAssetLoading(global);
         root = cx.newObject(global);
     }
 
@@ -50,7 +46,7 @@ public class ExternalArrayTest
         root.put("testArray", root, a);
         root.put("testArrayLength", root, 10);
         root.put("regularArray", root, true);
-        runScript("testsrc/jstests/extensions/external-array-test.js", 1);
+        runScript("jstests/extensions/external-array-test.js", 1);
     }
 
     @Test
@@ -65,7 +61,7 @@ public class ExternalArrayTest
         root.put("testArray", root, a);
         root.put("testArrayLength", root, 10);
         root.put("regularArray", root, false);
-        runScript("testsrc/jstests/extensions/external-array-test.js", 1);
+        runScript("jstests/extensions/external-array-test.js", 1);
     }
 
     @Test
@@ -81,7 +77,7 @@ public class ExternalArrayTest
         root.put("testArray", root, a);
         root.put("testArrayLength", root, 10);
         root.put("regularArray", root, false);
-        runScript("testsrc/jstests/extensions/external-array-test.js", 1);
+        runScript("jstests/extensions/external-array-test.js", 1);
 
         // Clear it and test again. When cleared, object should go back to behaving like a
         // regular JavaScript object.
@@ -93,7 +89,7 @@ public class ExternalArrayTest
         }
         a.defineProperty("length", 10, ScriptableObject.DONTENUM);
         root.put("regularArray", root, true);
-        runScript("testsrc/jstests/extensions/external-array-test.js", 1);
+        runScript("jstests/extensions/external-array-test.js", 1);
     }
 
     @Test
@@ -119,7 +115,7 @@ public class ExternalArrayTest
         root.put("testArray", root, a);
         root.put("testArrayLength", root, 10);
         root.put("regularArray", root, false);
-        runScript("testsrc/jstests/extensions/external-array-test.js", 1);
+        runScript("jstests/extensions/external-array-test.js", 1);
     }
 
     @Test
@@ -132,23 +128,12 @@ public class ExternalArrayTest
         root.put("testArray", root, a);
         root.put("testArrayLength", root, 10);
         root.put("regularArray", root, false);
-        runScript("testsrc/jstests/extensions/external-array-test.js", 1);
+        runScript("jstests/extensions/external-array-test.js", 1);
     }
 
-    private void runScript(String script, int opt)
-    {
-        try {
-            cx.setOptimizationLevel(opt);
-            FileReader rdr = new FileReader(script);
-
-            try {
-                cx.evaluateReader(root, rdr, script, 1, null);
-            } finally {
-                rdr.close();
-            }
-        } catch (IOException ioe) {
-            assertFalse("I/O Error: " + ioe, true);
-        }
+    private void runScript(String script, int opt) {
+        cx.setOptimizationLevel(opt);
+        cx.evaluateString(root, TestUtils.readAsset(script), script, 1, null);
     }
 
     private static class TestIntArray

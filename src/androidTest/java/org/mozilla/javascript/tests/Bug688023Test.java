@@ -4,7 +4,7 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,8 +15,6 @@ import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.ast.AstRoot;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * @author André Bargull
  *
@@ -26,7 +24,7 @@ public class Bug688023Test {
 
     @Before
     public void setUp() {
-        cx = RhinoAndroidHelper.prepareContext();
+        cx = Context.enter();
     }
 
     @After

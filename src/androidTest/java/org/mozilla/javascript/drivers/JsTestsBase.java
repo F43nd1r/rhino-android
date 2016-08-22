@@ -4,15 +4,15 @@
 
 package org.mozilla.javascript.drivers;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import com.faendir.rhino_android.RhinoAndroidHelper;
 
 import junit.framework.TestCase;
 
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Scriptable;
+
+import java.io.File;
+import java.io.IOException;
 
 public abstract class JsTestsBase extends TestCase {
     private int optimizationLevel;
@@ -40,17 +40,12 @@ public abstract class JsTestsBase extends TestCase {
     }
 
     public void runJsTests(File[] tests) throws IOException {
-        ContextFactory factory = ContextFactory.getGlobal();
-        Context cx = factory.enterContext();
+        Context cx = RhinoAndroidHelper.prepareContext();
         try {
             cx.setOptimizationLevel(this.optimizationLevel);
             Scriptable shared = cx.initStandardObjects();
             for (File f : tests) {
-                int length = (int) f.length(); // don't worry about very long
-                                               // files
-                char[] buf = new char[length];
-                new FileReader(f).read(buf, 0, length);
-                String session = new String(buf);
+                String session = TestUtils.readAsset(f);
                 runJsTest(cx, shared, f.getName(), session);
             }
         } finally {

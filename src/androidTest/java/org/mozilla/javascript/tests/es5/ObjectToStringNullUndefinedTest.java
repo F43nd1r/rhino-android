@@ -7,8 +7,6 @@
  */
 package org.mozilla.javascript.tests.es5;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +21,7 @@ public class ObjectToStringNullUndefinedTest {
 
     @Before
     public void setUp() {
-        cx = RhinoAndroidHelper.prepareContext();
+        cx = Context.enter();
         cx.setLanguageVersion(200);
         scope = cx.initStandardObjects();
     }

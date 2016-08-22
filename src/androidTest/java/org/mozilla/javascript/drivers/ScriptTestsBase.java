@@ -6,7 +6,6 @@ package org.mozilla.javascript.drivers;
 
 import com.faendir.rhino_android.RhinoAndroidHelper;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -15,15 +14,9 @@ import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.tools.shell.Global;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * This class is used for creating test scripts that are loaded from JS scripts. Each test must
@@ -31,7 +24,6 @@ import static org.junit.Assert.fail;
  * class level that returns the file name of the script to execute.
  */
 
-@Ignore
 @RunWith(BlockJUnit4ClassRunner.class)
 public abstract class ScriptTestsBase {
 
@@ -52,10 +44,10 @@ public abstract class ScriptTestsBase {
         Context cx = RhinoAndroidHelper.prepareContext();
         try {
             if (!"".equals(anno.value())) {
-                script = new InputStreamReader(new FileInputStream(anno.value()), "UTF-8");
+                script = new StringReader(TestUtils.readAsset(anno.value()));
                 suiteName = anno.value();
             } else if (!"".equals(anno.inline())) {
-                script = new StringReader("load('testsrc/assert.js');\n" + anno.inline() + "\n" + "'success';");
+                script = new StringReader("loadAsset('assert.js');\n" + anno.inline() + "\n" + "'success';");
                 suiteName = "inline.js";
             }
 
@@ -63,6 +55,7 @@ public abstract class ScriptTestsBase {
             cx.setLanguageVersion(jsVersion);
 
             Global global = new Global(cx);
+            TestUtils.addAssetLoading(global);
 
             Scriptable scope = cx.newObject(global);
             scope.setPrototype(global);

@@ -7,15 +7,13 @@
  */
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.RhinoAndroidHelper;
-
 import junit.framework.TestCase;
 
-import org.mozilla.javascript.ClassShutter;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.EvaluatorException;
-import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ClassShutter;
+import org.mozilla.javascript.RhinoException;
+import org.mozilla.javascript.EvaluatorException;
 
 /**
  * @author Norris Boyd
@@ -33,7 +31,7 @@ public class ClassShutterExceptionTest extends TestCase {
     }
 
     public void helper(String source) {
-        Context cx = RhinoAndroidHelper.prepareContext();
+        Context cx = Context.enter();
         Context.ClassShutterSetter setter = cx.getClassShutterSetter();
         try {
             Scriptable globalScope = cx.initStandardObjects();

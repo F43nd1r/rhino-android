@@ -4,47 +4,99 @@
 
 package org.mozilla.javascript.drivers;
 
-import java.io.*;
+import android.content.res.AssetManager;
+import android.support.test.InstrumentationRegistry;
+
+import com.google.common.io.ByteStreams;
+
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.tools.shell.Global;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.Arrays;
-
-import org.mozilla.javascript.ContextFactory;
 
 public class TestUtils {
-    private static ContextFactory.GlobalSetter globalSetter;
 
-    public static void grabContextFactoryGlobalSetter() {
-        if (globalSetter == null) {
-            globalSetter = ContextFactory.getGlobalSetter();
-        }
-    }
-
-    public static void setGlobalContextFactory(ContextFactory factory) {
-        grabContextFactoryGlobalSetter();
-        globalSetter.setContextFactoryGlobal(factory);
-    }
-
-    public static File[] recursiveListFiles(File dir, FileFilter filter) {
-        if (!dir.isDirectory())
-            throw new IllegalArgumentException(dir + " is not a directory");
+    public static File[] recursiveListAssets(File dir, FileFilter filter) {
         List<File> fileList = new ArrayList<File>();
-        recursiveListFilesHelper(dir, filter, fileList);
+        recursiveListAssetsHelper(dir, filter, fileList);
         return fileList.toArray(new File[fileList.size()]);
     }
 
-    public static void recursiveListFilesHelper(File dir, FileFilter filter,
-                                                List<File> fileList)
-    {
-        for (File f: dir.listFiles()) {
-            if (f.isDirectory()) {
-                recursiveListFilesHelper(f, filter, fileList);
-            } else {
-                if (filter.accept(f))
-                    fileList.add(f);
+    public static String readAsset(File file){
+        return readAsset(file.getPath());
+    }
+
+    public static String readAsset(String file) {
+        BufferedReader reader = null;
+        StringBuilder builder = new StringBuilder();
+        try {
+            reader = new BufferedReader(new InputStreamReader(InstrumentationRegistry.getContext().getAssets().open(file)));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line).append('\n');
+            }
+            if(builder.length() > 0)builder.deleteCharAt(builder.length() - 1);
+        } catch (IOException ignored) {
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ignored) {
+                }
             }
         }
+        return builder.toString();
+    }
+
+    public static void recursiveListAssetsHelper(File dir, FileFilter filter,
+                                                 List<File> fileList) {
+        AssetManager assetManager = InstrumentationRegistry.getContext().getAssets();
+        try {
+            String[] list = assetManager.list(dir.getPath());
+            if (list != null) {
+                for (String s : list) {
+                    File f = new File(dir, s);
+                    recursiveListAssetsHelper(f, filter, fileList);
+                    if (filter.accept(f))
+                        fileList.add(f);
+                }
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    public static List<File> listAssetDirectories(String dir) {
+        List<File> out = new ArrayList<>();
+        AssetManager assetManager = InstrumentationRegistry.getContext().getAssets();
+        try {
+            String[] list = assetManager.list(dir);
+            if (list != null) {
+                for (String s : list) {
+                    File f = new File(dir, s);
+                    String[] sub = assetManager.list(f.getPath());
+                    if(sub != null && sub.length > 0){
+                        out.add(f);
+                    }
+                }
+            }
+        } catch (IOException ignored) {
+        }
+        return out;
     }
 
     public static void addTestsFromFile(String filename, List<String> list)
@@ -56,7 +108,7 @@ public class TestUtils {
             throws IOException {
         Properties props = new Properties();
         props.load(in);
-        for (Object obj: props.keySet()) {
+        for (Object obj : props.keySet()) {
             list.add(obj.toString());
         }
     }
@@ -66,14 +118,18 @@ public class TestUtils {
         List<String> list = inherited == null ?
                 new ArrayList<String>() :
                 new ArrayList<String>(Arrays.asList(inherited));
-        InputStream in = JsTestsBase.class.getResourceAsStream(resource);
+        InputStream in = null;
+        try {
+            in = InstrumentationRegistry.getContext().getAssets().open(resource);
+        }catch (FileNotFoundException ignored){
+        }
         if (in != null)
             addTestsFromStream(in, list);
         return list.toArray(new String[0]);
     }
 
     public static boolean matches(String[] patterns, String path) {
-        for (int i=0; i<patterns.length; i++) {
+        for (int i = 0; i < patterns.length; i++) {
             if (path.startsWith(patterns[i])) {
                 return true;
             }
@@ -87,5 +143,46 @@ public class TestUtils {
             return pathname.getAbsolutePath().endsWith(".js");
         }
     };
+
+    public static void addAssetLoading(ScriptableObject scriptableObject){
+        scriptableObject.defineFunctionProperties(new String[]{"loadAsset"}, TestUtils.class, ScriptableObject.DONTENUM);
+    }
+
+    public static void loadAsset(Context cx, Scriptable thisObj,
+                                 Object[] args, Function funObj)
+    {
+        for (Object arg : args) {
+            String file = Context.toString(arg);
+            Global.load(cx, thisObj, new Object[]{copyFromAssets(file)}, funObj);
+        }
+    }
+
+    private static File copyFromAssets(String name) {
+        FileOutputStream out = null;
+        InputStream in = null;
+        try {
+            File file = new File(InstrumentationRegistry.getContext().getFilesDir(), name);
+            new File(file.getParent()).mkdirs();
+            out = new FileOutputStream(file);
+            in = InstrumentationRegistry.getContext().getAssets().open(name);
+            ByteStreams.copy(in, out);
+            return file;
+        } catch (IOException ignored) {
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ignored) {
+                }
+            }
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
+        return null;
+    }
 
 }
