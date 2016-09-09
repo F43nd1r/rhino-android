@@ -15,6 +15,8 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
+import java.io.File;
+
 /**
  * Takes care that it's possible to customize the result of the typeof operator.
  * See https://bugzilla.mozilla.org/show_bug.cgi?id=463996
@@ -125,7 +127,7 @@ public class TypeOfTest extends TestCase
 
 	private void doTest(final int optimizationLevel, final String expected, final ContextAction action)
 	{
-		Object o = new AndroidContextFactory().call(new ContextAction()
+		Object o = new AndroidContextFactory(new File(System.getProperty("java.io.tmpdir", "."), "classes")).call(new ContextAction()
 			{
 				public Object run(final Context context)
 				{

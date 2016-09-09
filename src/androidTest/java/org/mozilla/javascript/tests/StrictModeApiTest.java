@@ -14,6 +14,8 @@ import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.EvaluatorException;
 
+import java.io.File;
+
 /**
  * Test of strict mode APIs.
  *
@@ -25,7 +27,11 @@ public class StrictModeApiTest extends TestCase {
   private ContextFactory contextFactory;
 
   static class MyContextFactory extends AndroidContextFactory {
-    @Override
+      public MyContextFactory() {
+          super(new File(System.getProperty("java.io.tmpdir", "."), "classes"));
+      }
+
+      @Override
     protected boolean hasFeature(Context cx, int featureIndex) {
         switch (featureIndex) {
             case Context.FEATURE_STRICT_MODE:

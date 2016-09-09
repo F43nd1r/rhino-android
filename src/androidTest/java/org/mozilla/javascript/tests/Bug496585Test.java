@@ -12,6 +12,8 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextAction;
 import org.mozilla.javascript.Function;
 
+import java.io.File;
+
 public class Bug496585Test {
     public String method(String one, Function function) {
         return "string+function";
@@ -23,7 +25,7 @@ public class Bug496585Test {
 
     @Test
     public void callOverloadedFunction() {
-        new AndroidContextFactory().call(new ContextAction() {
+        new AndroidContextFactory(new File(System.getProperty("java.io.tmpdir", "."), "classes")).call(new ContextAction() {
             public Object run(Context cx) {
                 cx.getWrapFactory().setJavaPrimitiveWrap(false);
                 Assert.assertEquals("string[]", cx.evaluateString(

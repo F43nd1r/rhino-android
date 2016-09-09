@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mozilla.javascript.Context;
 
+import java.io.File;
+
 /**
  *
  * @author André Bargull
@@ -20,7 +22,7 @@ public class Bug637811Test {
 
     @Before
     public void setUp() throws Exception {
-        cx = new AndroidContextFactory() {
+        cx = new AndroidContextFactory(new File(System.getProperty("java.io.tmpdir", "."), "classes")) {
             @Override
             protected boolean hasFeature(Context cx, int featureIndex) {
                 switch (featureIndex) {

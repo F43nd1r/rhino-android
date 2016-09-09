@@ -7,9 +7,11 @@ import org.mozilla.javascript.SecurityController;
 import java.io.Serializable;
 
 /**
- * Created by Lukas on 11.01.2016.
  * The concept of SecurityControllers doesn't make sense on Android.
  * Load this controller to prevent loading of a different one.
+ *
+ * @author F43nd1r
+ * @since 11.01.2016
  */
 class NoSecurityController extends SecurityController implements Serializable {
     @Override

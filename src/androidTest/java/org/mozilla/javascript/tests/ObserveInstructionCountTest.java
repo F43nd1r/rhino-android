@@ -16,6 +16,8 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Scriptable;
 
+import java.io.File;
+
 /**
  * @author Norris Boyd
  */
@@ -33,6 +35,10 @@ public class ObserveInstructionCountTest extends TestCase {
     }
 
     static class MyFactory extends AndroidContextFactory {
+
+        public MyFactory() {
+            super(new File(System.getProperty("java.io.tmpdir", "."), "classes"));
+        }
 
         @Override
         protected Context makeContext()

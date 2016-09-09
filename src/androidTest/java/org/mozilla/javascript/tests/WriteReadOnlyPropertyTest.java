@@ -14,6 +14,7 @@ import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.ScriptableObject;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 /**
@@ -65,7 +66,7 @@ public class WriteReadOnlyPropertyTest {
 			}
 		};
 
-		final ContextFactory contextFactory = new AndroidContextFactory() {
+		final ContextFactory contextFactory = new AndroidContextFactory(new File(System.getProperty("java.io.tmpdir", "."), "classes")) {
 			@Override
 			protected boolean hasFeature(final Context cx, final int featureIndex) {
 				if (Context.FEATURE_STRICT_MODE == featureIndex) {

@@ -13,6 +13,8 @@ import org.mozilla.javascript.StackStyle;
 import org.mozilla.javascript.drivers.TestUtils;
 import org.mozilla.javascript.tools.shell.Global;
 
+import java.io.File;
+
 public class StackTraceExtensionTest
 {
     @BeforeClass
@@ -29,7 +31,7 @@ public class StackTraceExtensionTest
 
     private void testTraces(int opt)
     {
-        final ContextFactory factory = new AndroidContextFactory() {
+        final ContextFactory factory = new AndroidContextFactory(new File(System.getProperty("java.io.tmpdir", "."), "classes")) {
             @Override
             protected boolean hasFeature(Context cx, int featureIndex)
             {

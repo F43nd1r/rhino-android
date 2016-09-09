@@ -20,6 +20,8 @@ import org.mozilla.javascript.Script;
 import org.mozilla.javascript.tools.shell.Global;
 import org.mozilla.javascript.tools.shell.ShellContextFactory;
 
+import java.io.File;
+
 /**
  * @author donnamalayeri
  */
@@ -42,7 +44,7 @@ public class JavaAcessibilityTest extends TestCase {
 
     @Override
     protected GeneratedClassLoader createClassLoader(ClassLoader parent) {
-      return new AndroidClassLoader(parent);
+      return new AndroidClassLoader(parent, new File(System.getProperty("java.io.tmpdir", "."), "classes"));
     }
   };
 

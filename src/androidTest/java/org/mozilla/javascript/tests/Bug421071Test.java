@@ -18,6 +18,8 @@ import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 
+import java.io.File;
+
 public class Bug421071Test extends TestCase {
     private ContextFactory factory;
     private TopLevelScope globalScope;
@@ -66,6 +68,10 @@ public class Bug421071Test extends TestCase {
     }
 
     static class DynamicScopeContextFactory extends AndroidContextFactory {
+        public DynamicScopeContextFactory() {
+            super(new File(System.getProperty("java.io.tmpdir", "."), "classes"));
+        }
+
         @Override
         public boolean hasFeature(Context cx, int featureIndex) {
             if (featureIndex == Context.FEATURE_DYNAMIC_SCOPE)

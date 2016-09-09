@@ -42,7 +42,7 @@ public class Test262SuiteTest {
     static ShellContextFactory CTX_FACTORY = new ShellContextFactory(){
         @Override
         protected GeneratedClassLoader createClassLoader(ClassLoader parent) {
-            return new AndroidClassLoader(parent);
+            return new AndroidClassLoader(parent, new File(System.getProperty("java.io.tmpdir", "."), "classes"));
         }
     };
 
