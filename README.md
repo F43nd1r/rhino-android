@@ -18,8 +18,10 @@ Context.enter()
 ```
 use
 ```
-RhinoAndroidHelper.prepareContext()
+RhinoAndroidHelper.enterContext()
 ```
+
+An example project can be found [here](https://github.com/F43nd1r/rhino-android-example).
 
 #dx
 This uses google's dx tool which can be found here - https://android.googlesource.com/platform/dalvik
