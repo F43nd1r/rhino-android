@@ -15,3 +15,7 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+# Linguist
+*.js linguist-language=JavaScript
+src/androidTest/* linguist-vendored
