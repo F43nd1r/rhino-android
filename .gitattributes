@@ -18,4 +18,4 @@
 
 # Linguist
 *.js linguist-language=JavaScript
-src/androidTest/* linguist-vendored
+src/androidTest/assets/* linguist-vendored
