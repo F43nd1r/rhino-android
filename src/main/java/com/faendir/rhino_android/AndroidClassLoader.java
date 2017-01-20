@@ -44,6 +44,7 @@ import dalvik.system.DexFile;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @VisibleForTesting
 public class AndroidClassLoader extends ClassLoader implements GeneratedClassLoader {
+    private static int instanceCounter = 0;
 
     private final ClassLoader parent;
     private List<DexFile> dx;
@@ -60,10 +61,12 @@ public class AndroidClassLoader extends ClassLoader implements GeneratedClassLoa
     public AndroidClassLoader(ClassLoader parent, File dir) {
         this.parent = parent;
         dx = new ArrayList<>();
-        dexFile = new File(dir, "dex-" + hashCode() + ".jar");
-        odexOatFile = new File(dir, "odex_oat-" + hashCode() + ".tmp");
-        classFile = new File(dir, "class-" + hashCode() + ".jar");
+        int id = instanceCounter++;
+        dexFile = new File(dir, "dex-" + id + ".jar");
+        odexOatFile = new File(dir, "odex_oat-" + id + ".tmp");
+        classFile = new File(dir, "class-" + id + ".jar");
         dir.mkdirs();
+        reset();
     }
 
     /**
@@ -106,6 +109,12 @@ public class AndroidClassLoader extends ClassLoader implements GeneratedClassLoa
             exception.initCause(e);
             throw exception;
         }
+    }
+
+    void reset(){
+        dexFile.delete();
+        odexOatFile.delete();
+        classFile.delete();
     }
 
     private DexFile dexJar() throws IOException {

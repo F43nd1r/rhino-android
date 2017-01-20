@@ -18,6 +18,7 @@ package com.faendir.rhino_android;
 
 import android.support.annotation.VisibleForTesting;
 
+import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 
 import java.io.File;
@@ -52,5 +53,11 @@ public class AndroidContextFactory extends ContextFactory {
     @Override
     protected AndroidClassLoader createClassLoader(ClassLoader parent) {
         return new AndroidClassLoader(parent, cacheDirectory);
+    }
+
+    @Override
+    protected void onContextReleased(final Context cx) {
+        super.onContextReleased(cx);
+        ((AndroidClassLoader) cx.getApplicationClassLoader()).reset();
     }
 }
