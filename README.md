@@ -2,10 +2,10 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.faendir.rhino/rhino-android.svg?maxAge=2592000)](http://search.maven.org/#search%7Cga%7C1%7Ccom.faendir.rhino)
 [![Javadocs](http://www.javadoc.io/badge/com.faendir.rhino/rhino-android.svg)](http://www.javadoc.io/doc/com.faendir.rhino/rhino-android)
 
-#Rhino
+# Rhino
 Find information here - http://www.mozilla.org/rhino/
 
-#How to use
+# How to use
 
 Import via gradle
 ```
@@ -23,5 +23,5 @@ RhinoAndroidHelper.enterContext()
 
 An example project can be found [here](https://github.com/F43nd1r/rhino-android-example).
 
-#dx
+# dx
 This uses google's dx tool which can be found here - https://android.googlesource.com/platform/dalvik
