@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/F43nd1r/Scriptlib'
     gitUrl = 'https://github.com/F43nd1r/Scriptlib.git'
 
-    libraryVersion = "1.4"
+    libraryVersion = "1.5"
 
     developerId = 'f43nd1r'
     developerName = 'Lukas Morawietz'
@@ -25,13 +25,13 @@ ext {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 24
-        versionCode 4
+        targetSdkVersion 26
+        versionCode 5
         versionName libraryVersion
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -43,6 +43,7 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
     }
 }
 
@@ -54,12 +55,13 @@ configurations {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'org.mozilla:rhino:1.7.7.1'
-    compile 'com.android.support:support-annotations:24.2.0'
+    compile 'org.mozilla:rhino:1.7.7.2'
+    compile 'com.android.support:support-annotations:26.1.0'
     compile 'net.lingala.zip4j:zip4j:1.3.2'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'org.yaml:snakeyaml:1.16'
+    compile 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
+    androidTestCompile 'com.android.support.test:rules:1.0.1'
+    androidTestCompile 'org.yaml:snakeyaml:1.17'
     androidTestCompile ('com.google.caliper:caliper:1.0-beta-2'){
         exclude group:'asm', module:'asm'
     }

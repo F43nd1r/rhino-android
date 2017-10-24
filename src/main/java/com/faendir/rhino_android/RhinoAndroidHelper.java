@@ -90,16 +90,6 @@ public class RhinoAndroidHelper {
     }
 
     /**
-     * Compiles all classes in a jar file. They will be available in Rhino.
-     *
-     * @param jar the jar to load
-     * @throws IOException if the jar cannot be read or is invalid or there is a problem with the cache
-     */
-    public void loadClassJar(File jar) throws IOException {
-        ((AndroidClassLoader) getContextFactory().getApplicationClassLoader()).loadJar(jar);
-    }
-
-    /**
      * @return a context prepared for android
      * @deprecated use {@link #enterContext()} instead
      */
