@@ -9,7 +9,7 @@ Find information here - http://www.mozilla.org/rhino/
 
 Import via gradle
 ```
-compile 'com.faendir.rhino:rhino-android:1.4'
+compile 'com.faendir.rhino:rhino-android:1.5'
 ```
 
 Then, instead of calling 
@@ -18,7 +18,7 @@ Context.enter()
 ```
 use
 ```
-RhinoAndroidHelper.enterContext()
+new RhinoAndroidHelper(...).enterContext()
 ```
 
 An example project can be found [here](https://github.com/F43nd1r/rhino-android-example).
