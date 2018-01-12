@@ -43,7 +43,7 @@ class FileAndroidClassLoader extends BaseAndroidClassLoader {
     public FileAndroidClassLoader(ClassLoader parent, File cacheDir) {
         super(parent);
         int id = instanceCounter++;
-        dexFile = new File(cacheDir, "dex-" + id + ".jar");
+        dexFile = new File(cacheDir, id + ".dex");
         cacheDir.mkdirs();
         reset();
     }

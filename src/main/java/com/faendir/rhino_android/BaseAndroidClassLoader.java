@@ -25,6 +25,7 @@ import com.android.dx.cf.direct.StdAttributeFactory;
 import com.android.dx.dex.DexOptions;
 import com.android.dx.dex.cf.CfOptions;
 import com.android.dx.dex.cf.CfTranslator;
+import com.android.dx.dex.file.DexFile;
 import com.android.dx.merge.CollisionPolicy;
 import com.android.dx.merge.DexMerger;
 
@@ -56,7 +57,7 @@ abstract class BaseAndroidClassLoader extends ClassLoader implements GeneratedCl
     public Class<?> defineClass(String name, byte[] data) {
         try {
             DexOptions dexOptions = new DexOptions();
-            com.android.dx.dex.file.DexFile dexFile = new com.android.dx.dex.file.DexFile(dexOptions);
+            DexFile dexFile = new DexFile(dexOptions);
             DirectClassFile classFile = new DirectClassFile(data, name.replace('.', '/') + ".class", true);
             classFile.setAttributeFactory(StdAttributeFactory.THE_ONE);
             classFile.getMagic();

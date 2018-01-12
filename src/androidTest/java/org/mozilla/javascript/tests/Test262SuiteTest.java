@@ -4,7 +4,8 @@
 
 package org.mozilla.javascript.tests;
 
-import com.faendir.rhino_android.AndroidClassLoader;
+
+import com.faendir.rhino_android.AndroidContextFactory;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class Test262SuiteTest {
     static ShellContextFactory CTX_FACTORY = new ShellContextFactory(){
         @Override
         protected GeneratedClassLoader createClassLoader(ClassLoader parent) {
-            return new AndroidClassLoader(parent, new File(System.getProperty("java.io.tmpdir", "."), "classes"));
+            return (GeneratedClassLoader) new AndroidContextFactory(new File(System.getProperty("java.io.tmpdir", "."), "classes")).getApplicationClassLoader();
         }
     };
 

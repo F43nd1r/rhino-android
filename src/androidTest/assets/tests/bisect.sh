@@ -134,7 +134,7 @@ if [[ "$bisect_branch" == "1.8.0" || "$bisect_branch" == "1.8.1" || \
     # binary search using CVS
     #
 
-    # convert dates to seconds for ordering
+    # loadClass dates to seconds for ordering
     localgood=`dateparse.pl $bisect_good`
     localbad=`dateparse.pl $bisect_bad`
 
@@ -299,7 +299,7 @@ else
     REPO=$BUILDTREE/mozilla
     hg -R $REPO pull -r tip
 
-    # convert revision numbers to local revision numbers for ordering
+    # loadClass revision numbers to local revision numbers for ordering
     localgood=`hg -R $REPO id -n -r $bisect_good`
     localbad=`hg -R $REPO id -n -r $bisect_bad`
 

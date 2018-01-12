@@ -66,13 +66,13 @@ public class GeneratedMethodNameTest extends TestCase
 	    public String readCurrentFunctionJavaName() {
             final Throwable t = new RuntimeException();
             // remove prefix and suffix of method name
-            return t.getStackTrace()[8].getMethodName().
+            return t.getStackTrace()[5].getMethodName().
                 replaceFirst("_[^_]*_(.*)_[^_]*", "$1");
 	    }
 	}
 
 	public void doTest(final String scriptCode) throws Exception {
-		final Context cx = RhinoAndroidHelper.prepareContext();
+		final Context cx = new RhinoAndroidHelper().enterContext();
 		try {
             Scriptable topScope = cx.initStandardObjects();
     		topScope.put("javaNameGetter", topScope, new JavaNameGetter());

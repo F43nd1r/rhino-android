@@ -122,7 +122,7 @@ public class PrimitiveTypeScopeResolutionTest
   }
 
   /**
-   * Test that FunctionObject use the right top scope to convert a primitive
+   * Test that FunctionObject use the right top scope to loadClass a primitive
    * to an object
    */
   @Test

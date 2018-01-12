@@ -225,7 +225,7 @@ js1_5/extensions/regress-50447-1.js
 # Invalid bug
 e4x/Regress/regress-278112.js
 
-# Invalid test? Cannot convert NaN to java.lang.Long
+# Invalid test? Cannot loadClass NaN to java.lang.Long
 lc3/template.js
 
 # Depends on generators being closed due to a call to gc(). Java finalizers
