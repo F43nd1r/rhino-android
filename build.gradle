@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
+apply plugin: 'digital.wup.android-maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
 android {
@@ -27,8 +27,8 @@ android {
 }
 
 dependencies {
-    api 'org.mozilla:rhino:1.7.7.2'
-    implementation 'com.android.support:support-annotations:27.0.2'
+    api 'org.mozilla:rhino:1.7.8'
+    implementation 'com.android.support:support-annotations:27.1.0'
     implementation 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
@@ -109,37 +109,8 @@ publishing {
             version libraryVersion
             artifact sourcesJar
             artifact javadocJar
-            artifact bundleRelease
+            from components.android
             createPom(pom)
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-
-                // List all compile dependencies and write to POM
-                configurations.implementation.getAllDependencies().each { dep ->
-                    if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
-                        return // ignore invalid dependencies
-
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', dep.group)
-                    dependencyNode.appendNode('artifactId', dep.name)
-                    dependencyNode.appendNode('version', dep.version)
-
-                    if (!dep.transitive) {
-                        // If this dependency is transitive, we should force exclude all its dependencies them from the POM
-                        def exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                        exclusionNode.appendNode('groupId', '*')
-                        exclusionNode.appendNode('artifactId', '*')
-                    } else if (!dep.properties.excludeRules.empty) {
-                        // Otherwise add specified exclude rules
-                        def exclusionsNode = dependencyNode.appendNode('exclusions')
-                        dep.properties.excludeRules.each { rule ->
-                            def exclusionNode = exclusionsNode.appendNode('exclusion')
-                            exclusionNode.appendNode('groupId', rule.group ?: '*')
-                            exclusionNode.appendNode('artifactId', rule.module ?: '*')
-                        }
-                    }
-                }
-            }
         }
     }
 }
