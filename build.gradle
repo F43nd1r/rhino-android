@@ -113,35 +113,6 @@ publishing {
             artifact sourcesJar
             artifact javadocJar
             createPom(pom)
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-
-                // List all compile dependencies and write to POM
-                configurations.implementation.getAllDependencies().each { dep ->
-                    if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
-                        return // ignore invalid dependencies
-
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', dep.group)
-                    dependencyNode.appendNode('artifactId', dep.name)
-                    dependencyNode.appendNode('version', dep.version)
-
-                    if (!dep.transitive) {
-                        // If this dependency is transitive, we should force exclude all its dependencies them from the POM
-                        def exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                        exclusionNode.appendNode('groupId', '*')
-                        exclusionNode.appendNode('artifactId', '*')
-                    } else if (!dep.properties.excludeRules.empty) {
-                        // Otherwise add specified exclude rules
-                        def exclusionsNode = dependencyNode.appendNode('exclusions')
-                        dep.properties.excludeRules.each { rule ->
-                            def exclusionNode = exclusionsNode.appendNode('exclusion')
-                            exclusionNode.appendNode('groupId', rule.group ?: '*')
-                            exclusionNode.appendNode('artifactId', rule.module ?: '*')
-                        }
-                    }
-                }
-            }
         }
     }
 }
