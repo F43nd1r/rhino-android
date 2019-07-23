@@ -9,7 +9,7 @@ Find information here - http://www.mozilla.org/rhino/
 
 Import via gradle
 ```
-compile 'com.faendir.rhino:rhino-android:1.5'
+compile 'com.faendir.rhino:rhino-android:1.5.2'
 ```
 
 Then, instead of calling 
@@ -24,4 +24,4 @@ new RhinoAndroidHelper(...).enterContext()
 An example project can be found [here](https://github.com/F43nd1r/rhino-android-example).
 
 # dx
-This uses google's dx tool which can be found here - https://android.googlesource.com/platform/dalvik
+This uses google's dx tool which can be found here - <https://android.googlesource.com/platform/dalvik>

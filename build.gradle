@@ -1,13 +1,15 @@
-apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
+plugins {
+    id 'com.android.library'
+    id 'digital.wup.android-maven-publish' version '3.6.2'
+    id "com.jfrog.bintray" version "1.8.4"
+}
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 27
+        targetSdkVersion 29
         versionName libraryVersion
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFile "proguard-rules.pro"
@@ -27,12 +29,12 @@ android {
 }
 
 dependencies {
-    api 'org.mozilla:rhino:1.7.7.2'
-    implementation 'com.android.support:support-annotations:27.0.2'
-    implementation 'com.jakewharton.android.repackaged:dalvik-dx:7.1.0_r7'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
-    androidTestImplementation 'org.yaml:snakeyaml:1.19'
+    api 'org.mozilla:rhino:1.7.11'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'org.yaml:snakeyaml:1.24'
     androidTestImplementation('com.google.caliper:caliper:1.0-beta-2') {
         exclude group: 'asm', module: 'asm'
     }
@@ -60,7 +62,7 @@ task javadoc(type: Javadoc) {
         }
     }
     afterEvaluate {
-        dependsOn assembleRelease
+        dependsOn "assembleRelease"
     }
 }
 
@@ -105,11 +107,11 @@ ext.createPom = { pom ->
 publishing {
     publications {
         maven(MavenPublication) {
+            from components.android
             groupId 'com.faendir.rhino'
             version libraryVersion
             artifact sourcesJar
             artifact javadocJar
-            artifact bundleRelease
             createPom(pom)
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')

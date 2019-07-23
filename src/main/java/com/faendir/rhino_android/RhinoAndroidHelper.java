@@ -16,14 +16,12 @@
 
 package com.faendir.rhino_android;
 
-import android.support.annotation.VisibleForTesting;
-
+import androidx.annotation.VisibleForTesting;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.SecurityController;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Helps to prepare a Rhino Context for usage on android.

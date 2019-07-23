@@ -17,8 +17,7 @@
 package com.faendir.rhino_android;
 
 import android.os.Build;
-import android.support.annotation.VisibleForTesting;
-
+import androidx.annotation.VisibleForTesting;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 

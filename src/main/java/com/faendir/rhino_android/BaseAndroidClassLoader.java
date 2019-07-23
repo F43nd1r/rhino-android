@@ -16,19 +16,18 @@
 
 package com.faendir.rhino_android;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.android.dex.Dex;
 import com.android.dx.cf.direct.DirectClassFile;
 import com.android.dx.cf.direct.StdAttributeFactory;
+import com.android.dx.command.dexer.DxContext;
 import com.android.dx.dex.DexOptions;
 import com.android.dx.dex.cf.CfOptions;
 import com.android.dx.dex.cf.CfTranslator;
 import com.android.dx.dex.file.DexFile;
 import com.android.dx.merge.CollisionPolicy;
 import com.android.dx.merge.DexMerger;
-
 import org.mozilla.javascript.GeneratedClassLoader;
 
 import java.io.IOException;
@@ -61,11 +60,12 @@ abstract class BaseAndroidClassLoader extends ClassLoader implements GeneratedCl
             DirectClassFile classFile = new DirectClassFile(data, name.replace('.', '/') + ".class", true);
             classFile.setAttributeFactory(StdAttributeFactory.THE_ONE);
             classFile.getMagic();
-            dexFile.add(CfTranslator.translate(classFile, null, new CfOptions(), dexOptions, dexFile));
+            DxContext context = new DxContext();
+            dexFile.add(CfTranslator.translate(context, classFile, null, new CfOptions(), dexOptions, dexFile));
             Dex dex = new Dex(dexFile.toDex(null, false));
             Dex oldDex = getLastDex();
             if (oldDex != null) {
-                dex = new DexMerger(new Dex[]{dex, oldDex}, CollisionPolicy.KEEP_FIRST).merge();
+                dex = new DexMerger(new Dex[]{dex, oldDex}, CollisionPolicy.KEEP_FIRST, context).merge();
             }
             return loadClass(dex, name);
         } catch (IOException | ClassNotFoundException e) {
