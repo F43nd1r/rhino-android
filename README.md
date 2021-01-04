@@ -9,7 +9,7 @@ Find information here - http://www.mozilla.org/rhino/
 
 Import via gradle
 ```
-compile 'com.faendir.rhino:rhino-android:1.5.2'
+compile 'com.faendir.rhino:rhino-android:1.6.0'
 ```
 
 Then, instead of calling 
