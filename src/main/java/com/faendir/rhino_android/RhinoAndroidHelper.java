@@ -16,7 +16,6 @@
 
 package com.faendir.rhino_android;
 
-import androidx.annotation.VisibleForTesting;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.SecurityController;
@@ -35,8 +34,10 @@ public class RhinoAndroidHelper {
 
     /**
      * Constructs a new helper using the default temporary directory.
-     * Note: It is recommended to use a custom directory, so no permission problems occur.
+     *
+     * @deprecated permission issues may occur.
      */
+    @Deprecated
     public RhinoAndroidHelper() {
         this(new File(System.getProperty("java.io.tmpdir", "."), "classes"));
     }
@@ -60,6 +61,15 @@ public class RhinoAndroidHelper {
     }
 
     /**
+     * @return a context prepared for android
+     * @deprecated use {@link #enterContext()} instead
+     */
+    @Deprecated
+    public static Context prepareContext() {
+        return new RhinoAndroidHelper().enterContext();
+    }
+
+    /**
      * call this instead of {@link Context#enter()}
      *
      * @return a context prepared for android
@@ -73,26 +83,25 @@ public class RhinoAndroidHelper {
     /**
      * @return The Context factory which has to be used on android.
      */
-    @VisibleForTesting
     public AndroidContextFactory getContextFactory() {
         AndroidContextFactory factory;
         if (!ContextFactory.hasExplicitGlobal()) {
-            factory = new AndroidContextFactory(cacheDirectory);
+            factory = createAndroidContextFactory(cacheDirectory);
             ContextFactory.getGlobalSetter().setContextFactoryGlobal(factory);
         } else if (!(ContextFactory.getGlobal() instanceof AndroidContextFactory)) {
             throw new IllegalStateException("Cannot initialize factory for Android Rhino: There is already another factory");
         } else {
-            factory = (AndroidContextFactory) ContextFactory.getGlobal();
+            factory = (AndroidContextFactory)ContextFactory.getGlobal();
         }
         return factory;
     }
 
     /**
-     * @return a context prepared for android
-     * @deprecated use {@link #enterContext()} instead
+     * Override this to modify the context factory.
+     *
+     * @return a new {@link AndroidContextFactory}
      */
-    @Deprecated
-    public static Context prepareContext() {
-        return new RhinoAndroidHelper().enterContext();
+    protected AndroidContextFactory createAndroidContextFactory(File cacheDirectory) {
+        return new AndroidContextFactory(cacheDirectory);
     }
 }

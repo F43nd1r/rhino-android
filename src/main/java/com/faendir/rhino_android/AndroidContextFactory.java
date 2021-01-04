@@ -29,7 +29,6 @@ import java.io.File;
  * @author F43nd1r
  * @since 11.01.2016
  */
-@VisibleForTesting
 public class AndroidContextFactory extends ContextFactory {
 
     private final File cacheDirectory;
@@ -50,9 +49,8 @@ public class AndroidContextFactory extends ContextFactory {
      * @param parent the parent of the create classloader
      * @return a new ClassLoader
      */
-    @VisibleForTesting
     @Override
-    public BaseAndroidClassLoader createClassLoader(ClassLoader parent) {
+    protected BaseAndroidClassLoader createClassLoader(ClassLoader parent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return new InMemoryAndroidClassLoader(parent);
         }
