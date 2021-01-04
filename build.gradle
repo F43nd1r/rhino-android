@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionName libraryVersion
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFile "proguard-rules.pro"
@@ -29,15 +29,9 @@ android {
 }
 
 dependencies {
-    api 'org.mozilla:rhino:1.7.11'
+    api 'org.mozilla:rhino-runtime:1.7.13'
     implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'com.jakewharton.android.repackaged:dalvik-dx:9.0.0_r3'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation 'org.yaml:snakeyaml:1.24'
-    androidTestImplementation('com.google.caliper:caliper:1.0-beta-2') {
-        exclude group: 'asm', module: 'asm'
-    }
+    implementation 'com.jakewharton.android.repackaged:dalvik-dx:11.0.0_r3'
 }
 
 
